@@ -1,8 +1,46 @@
 <!doctype html>
 <html lang="ru">
   <head>
-    <script>const p=location.pathname.replace(/\/index\.html$/,"").replace(/\/+$/,"")||"/";if(["/","/resume","/yandex-music","/yandex-cloud","/cyprus-data","/valiotti-analytics"].includes(p)&&p!==location.pathname)history.replaceState(history.state,"",p+location.search+location.hash);</script>
     <meta charset="UTF-8" />
+    <script>(function pagesEntry(routes) {
+  const normalize = (path) =>
+    path.replace(/\/index\.html$/, '').replace(/\/+$/, '') || '/'
+  const path = normalize(location.pathname)
+  if (!routes.includes(path)) return
+  const key = 'portfolio:pages-reload'
+  let state = history.state
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(key) || 'null')
+    sessionStorage.removeItem(key)
+    if (
+      !state &&
+      performance.getEntriesByType('navigation')[0]?.type === 'reload' &&
+      saved?.path === path &&
+      saved?.query === location.search &&
+      saved?.hash === location.hash
+    )
+      state = saved.state
+  } catch {
+    /* Storage may be disabled; normal navigation remains available. */
+  }
+  if (path !== location.pathname || state !== history.state)
+    history.replaceState(state, '', path + location.search + location.hash)
+  addEventListener('pagehide', () => {
+    try {
+      sessionStorage.setItem(
+        key,
+        JSON.stringify({
+          path: normalize(location.pathname),
+          query: location.search,
+          hash: location.hash,
+          state: history.state,
+        }),
+      )
+    } catch {
+      /* No persistent storage is required for rendering. */
+    }
+  })
+})(["/","/resume","/yandex-music","/yandex-cloud","/cyprus-data","/valiotti-analytics"])</script>
     <link rel="icon" href="data:," />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
