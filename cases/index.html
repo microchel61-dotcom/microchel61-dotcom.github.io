@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function pagesEntry(routes) {
+  const normalize = (path) =>
+    path.replace(/\/index\.html$/, '').replace(/\/+$/, '') || '/'
+  const path = normalize(location.pathname)
+  if (!routes.includes(path)) return
+  const key = 'portfolio:pages-reload'
+  let state = history.state
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(key) || 'null')
+    sessionStorage.removeItem(key)
+    if (
+      !state &&
+      performance.getEntriesByType('navigation')[0]?.type === 'reload' &&
+      saved?.path === path &&
+      saved?.query === location.search &&
+      saved?.hash === location.hash
+    )
+      state = saved.state
+  } catch {
+    /* Storage may be disabled; normal navigation remains available. */
+  }
+  if (path !== location.pathname || state !== history.state)
+    history.replaceState(state, '', path + location.search + location.hash)
+  addEventListener('pagehide', () => {
+    try {
+      sessionStorage.setItem(
+        key,
+        JSON.stringify({
+          path: normalize(location.pathname),
+          query: location.search,
+          hash: location.hash,
+          state: history.state,
+        }),
+      )
+    } catch {
+      /* No persistent storage is required for rendering. */
+    }
+  })
+})(["/","/cases","/resume","/yandex-music","/yandex-cloud","/cyprus-data","/valiotti-analytics"])</script>
+    <link rel="icon" href="data:," />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Полина Сорокина — мультидисциплинарный дизайнер. Брендинг, 2D- и 3D-иллюстрации, SMM-дизайн и digital-проекты."
+    />
+    <link
+      rel="preload"
+      href="/fonts/golos-text.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/arial-narrow.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <title>Портфолио — Полина Сорокина</title>
+    <script type="module" crossorigin src="/assets/index-Cgwd31ZZ.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CXW3sCRI.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
